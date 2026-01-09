@@ -1,0 +1,19 @@
+{
+  "name": "curso-epilif-schedamps",
+  "version": "1.0.0",
+  "description": "dependencias do curso epilif schedamps",
+  "license": "MIT",
+  "author": "",  
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: nao tem nenhum teste por enquanto\" && exit 1",
+    "dev": "next dev"
+  },
+  "dependencies": {
+    "DOM": "^0.0.3",
+    "next": "^16.1.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  }
+}

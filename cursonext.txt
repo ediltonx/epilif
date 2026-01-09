@@ -1,0 +1,135 @@
+CURSO INTENSIVO DE DESENVOLVIMENTO WEB COM NEXT.JS
+
+Objetivo: dar visão ampla e prática de Next.js (focando no App Router moderno) para você construir, testar e publicar apps web completos.
+
+1) Fundamentos necessários
+- JS/TS: módulos, async/await, fetch, array/object methods, Promises.
+- React: componentes, props, estado, hooks (useState, useEffect), contexto básico.
+- Ambiente: Node 18+, npm ou yarn, editor com ESLint/Prettier.
+
+2) Criando e explorando um projeto
+- Comando: npx create-next-app@latest meu-app
+- Opções: TypeScript (recomendado), ESLint, src/, App Router (sim), Tailwind (opcional), import alias.
+- Estrutura principal com App Router:
+  - app/: rotas baseadas em pastas; page.tsx é a entrada de cada rota.
+  - layout.tsx: define layout e <html>/<body>; pode aninhar.
+  - loading.tsx e error.tsx: estados de carregamento/erro por segmento.
+  - not-found.tsx: 404 scoped.
+  - route.ts (POST/GET etc.): rotas de API no App Router.
+  - public/: assets estáticos servidos direto.
+  - next.config.js: configs (images, rewrites, redirects, headers, experimental).
+  - package.json: scripts (dev, build, start, lint).
+
+3) Renderização e dados (SSR, SSG, ISR, CSR)
+- Server Components (padrão): rodam no servidor, não incluem JS no cliente, bons para data fetching e SEO.
+- Client Components: use 'use client' no topo; necessários para estado/efeitos, eventos, libs de UI com browser API.
+- Data fetching em Server Components: async function com fetch; caching padrão é "cache full". Para SSR dinâmico, use fetch com { cache: 'no-store' } ou export const dynamic = 'force-dynamic'.
+- SSG/ISR: fetch com { next: { revalidate: 60 } } para regeneração; páginas geradas a cada hit após tempo.
+- CSR: usar Client Components com useEffect ou SWR/React Query quando o dado depende da interação do usuário.
+
+4) Rotas, layouts e navegação
+- Estrutura de pastas define URLs: app/blog/page.tsx -> /blog; app/blog/[slug]/page.tsx -> /blog/:slug.
+- Layouts aninhados: app/blog/layout.tsx encapsula /blog/*.
+- Navegação: useLink do next/link; useRouter do next/navigation para push/replace, refresh, back.
+- Rotas paralelas/interceptadas: pastas @slot, (grupo), e interceptação (.) para composições avançadas.
+- Middleware: middleware.ts na raiz para auth básica, rewrites, headers; roda em edge.
+
+5) Manipulando formulários e ações
+- Formulários podem ser Server Actions: export async function action(formData: FormData) {}; usar <form action={action}>.
+- Validação: zod/yup no servidor; usar status codes adequados nas rotas de API ou actions.
+- Uploads: usar <input type="file"> com rotas de API ou provedores (S3/Cloudflare R2); configurar bodyParser ou usar edge compatível.
+
+6) APIs internas
+- App Router: app/api/users/route.ts -> GET, POST etc. export const dynamic = 'force-dynamic' se precisar; return NextResponse.json().
+- Requisições: fetch('/api/users') ou chamadas server-side para serviços externos; cuidado com credenciais.
+- Middleware + API: proteger endpoints, rate limit (limiter em memória/Redis), CORS via headers.
+
+7) Estilização e UI
+- Opções: CSS Modules (component-level), Tailwind CSS, Styled Components, Stitches, Vanilla Extract.
+- Global styles em app/globals.css; reset e tokens de design.
+- next/font para fontes otimizadas; use classes fornecidas.
+- Imagens: <Image> otimiza; configure domains em next.config.js; use fill/width/height.
+- Ícones: @phosphor-icons/react, lucide-react etc.
+
+8) Estado e dados no cliente
+- Estado local: useState/useReducer.
+- Estado global: Context, Zustand, Jotai, Redux Toolkit, Recoil; escolha pelo tamanho/complexidade.
+- Data fetching client: SWR ou React Query para cache, revalidação, mutações otimistas.
+- Sincronizar com Server Components: preferir Server para dados iniciais e hidratar apenas o necessário.
+
+9) Autenticação e autorização
+- next-auth (Auth.js): providers OAuth (Google/GitHub), credentials, JWT ou DB; middleware para proteger rotas.
+- Cookies e sessões: usar cookies HttpOnly via NextResponse; em Server Components, acessar cookies() e headers().
+- RBAC/ABAC: guarde roles/claims no token; checar no servidor sempre que possível.
+
+10) Banco de dados e ORM
+- Prisma: schema.prisma, migrations, client tipado; usar edge? considerar drizzle-orm (melhor em edge) ou supabase client.
+- conexões: use connection pooling (pgBouncer) para SSR/ISR; para edge, preferir bancos serverless (PlanetScale, Neon).
+
+11) Configurações essenciais
+- next.config.js: imagens, internacionalização (i18n), trailingSlash, experimental (serverActions, typedRoutes).
+- Variáveis de ambiente: .env.local para dev, process.env.*, NUNCA com 'use client' contendo segredo.
+- Lint/format: eslint --fix, prettier; configure scripts no package.json.
+
+12) Performance e caching
+- Prefetch automático de <Link>; pode desabilitar com prefetch={false}.
+- Segment-level caching: revalidate, dynamic, fetch cache; route handlers podem setHeader de cache.
+- Imagens otimizada e fontes locais; medir com Lighthouse/Next Analytics.
+- Evitar Client Components desnecessárias; dividir bundles com dynamic(() => import(...)).
+
+13) SEO e metadata
+- app/layout.tsx export const metadata; por página: generateMetadata.
+- Open Graph/Twitter: defina title, description, icons, og:image.
+- Sitemap/robots: app/sitemap.ts, app/robots.txt.
+
+14) Internacionalização
+- i18n nativo em next.config.js (locales, defaultLocale) ou libs como next-intl.
+- Estratégia de traduções: JSON por locale, namespaces, dynamic import.
+
+15) Acessibilidade
+- Use elementos semânticos, aria-* quando necessário, foco visível, skip links.
+- Teste com Lighthouse, axe, teclado somente.
+
+16) Testes e qualidade
+- Unitário: Vitest/Jest com @testing-library/react.
+- Integração/E2E: Playwright (recomendado) ou Cypress.
+- Lint: eslint .; Tipagem: tsc --noEmit.
+- CI: GitHub Actions para lint + test + build.
+
+17) Deploy e operação
+- Plataformas: Vercel (nativo), Netlify, AWS Amplify, fly.io; escolha runtime (node vs edge) conforme dependências.
+- Variáveis de ambiente de produção: configurar no painel ou secrets da plataforma.
+- Observabilidade: logs (Vercel/Datadog), métricas (OpenTelemetry experimental), monitoramento de erros (Sentry).
+
+18) Padrão de projeto sugerido
+- Pastas: app/(marketing), app/(app)/dashboard, lib/ (clients/util), components/, styles/, hooks/, server/ (actions/queries), tests/.
+- Naming: use TS e tipagem estrita; evite default export para componentes reutilizáveis.
+- Services: encapsule chamadas externas em /lib ou /server para reutilizar e testar.
+
+19) Roadmap de estudos prático (ordem)
+- Dia 1: instalar, rodar create-next-app, entender App Router, layouts, page.tsx.
+- Dia 2: Server vs Client components; data fetching server; estilizar com Tailwind ou CSS Modules.
+- Dia 3: Rotas dinâmicas, loading/error/not-found; formulários simples com Server Actions.
+- Dia 4: Rotas de API e middleware; autenticação básica com next-auth.
+- Dia 5: Conectar banco via Prisma/Drizzle; páginas com dados reais; revalidate vs no-store.
+- Dia 6: Otimização (Image, fonte, dynamic import), metadata/SEO, i18n básico.
+- Dia 7: Testes (unit + e2e), CI simples, deploy na Vercel.
+
+20) Próximos passos avançados
+- Rotas paralelas e interceptadas para modais/layouts complexos.
+- Streaming/partial rendering com suspense boundaries.
+- Edge runtimes e websockets (pusher/ably) para tempo real.
+- Feature flags/AB testing (LaunchDarkly/GrowthBook/Vercel Flags).
+
+Checklist rápido antes do deploy
+- npm run lint && npm run test (ou vitest/playwright).
+- Verificar variáveis de ambiente e secrets.
+- SEO: metadata por rota, sitemap/robots.
+- Acessibilidade: navegação por teclado e contrastes.
+- Observabilidade: capturar erros e logs.
+
+Referências
+- Documentação oficial Next.js: https://nextjs.org/docs
+- Repositório de exemplos: https://github.com/vercel/next.js/tree/canary/examples
+- Auth.js/next-auth: https://authjs.dev
+- Prisma: https://www.prisma.io/docs

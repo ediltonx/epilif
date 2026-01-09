@@ -1,0 +1,338 @@
+TUTORIAL REACT - PRIMEIROS PASSOS
+
+Este tutorial irá guiá-lo pelos primeiros passos para começar a usar o React, um framework JavaScript para construir interfaces de usuário.
+
+1. PRÉ-REQUISITOS
+   - Instale o Node.js (versão 14 ou superior) em seu sistema. Você pode baixá-lo em nodejs.org.
+   - Verifique a instalação executando 'node -v' e 'npm -v' no terminal.
+
+2. CRIANDO UM NOVO PROJETO REACT
+   - Abra o terminal e navegue até o diretório onde deseja criar o projeto.
+   - Execute o comando: npx create-react-app meu-primeiro-app
+     (Substitua 'meu-primeiro-app' pelo nome desejado para seu projeto.)
+   - Aguarde a instalação das dependências.
+
+3. ESTRUTURA DO PROJETO
+   Após a criação, você verá uma estrutura de pastas como:
+   - public/: Contém arquivos estáticos como index.html.
+   - src/: Onde você escreverá o código React.
+     - App.js: Componente principal.
+     - index.js: Ponto de entrada da aplicação.
+
+4. SEU PRIMEIRO COMPONENTE
+   - Abra src/App.js em um editor de código.
+   - Substitua o conteúdo por:
+     import React from 'react';
+
+     function App() {
+       return (
+         <div>
+           <h1>Olá, Mundo!</h1>
+           <p>Este é meu primeiro componente React.</p>
+         </div>
+       );
+     }
+
+     export default App;
+
+5. EXECUTANDO A APLICAÇÃO
+   - No terminal, navegue até a pasta do projeto (cd meu-primeiro-app).
+   - Execute: npm start
+   - Abra seu navegador e acesse http://localhost:3000 para ver a aplicação em execução.
+
+6. JSX (JAVASCRIPT XML)
+   JSX é uma extensão de sintaxe do JavaScript que permite escrever código semelhante a HTML dentro do JavaScript. É a forma principal de criar elementos React.
+
+   Características do JSX:
+   - Parece HTML, mas é JavaScript por baixo dos panos.
+   - Permite inserir expressões JavaScript usando chaves {}.
+   - Atributos usam camelCase (ex: className ao invés de class).
+
+   Exemplo básico de JSX:
+     const nome = "Maria";
+     const idade = 25;
+
+     function Saudacao() {
+       return (
+         <div>
+           <h1>Olá, {nome}!</h1>
+           <p>Você tem {idade} anos.</p>
+           <p>Ano que vem você terá {idade + 1} anos.</p>
+         </div>
+       );
+     }
+
+   Exemplo com condicionais:
+     function MensagemBoasVindas({ usuarioLogado }) {
+       return (
+         <div>
+           {usuarioLogado ? (
+             <h1>Bem-vindo de volta!</h1>
+           ) : (
+             <h1>Por favor, faça login.</h1>
+           )}
+         </div>
+       );
+     }
+
+   Exemplo com listas:
+     function ListaFrutas() {
+       const frutas = ["Maçã", "Banana", "Laranja"];
+
+       return (
+         <ul>
+           {frutas.map((fruta, index) => (
+             <li key={index}>{fruta}</li>
+           ))}
+         </ul>
+       );
+     }
+
+7. COMPONENTES FUNCIONAIS
+   Componentes são blocos de construção reutilizáveis no React. Componentes funcionais são funções JavaScript que retornam JSX.
+
+   Características:
+   - São funções simples que recebem props (propriedades) e retornam JSX.
+   - Mais fáceis de ler e testar.
+   - Podem usar hooks para gerenciar estado e efeitos.
+
+   Exemplo de componente simples:
+     function BotaoClique() {
+       return (
+         <button>Clique aqui!</button>
+       );
+     }
+
+   Exemplo com props (propriedades):
+     function CartaoUsuario({ nome, email, foto }) {
+       return (
+         <div className="cartao">
+           <img src={foto} alt={nome} />
+           <h2>{nome}</h2>
+           <p>{email}</p>
+         </div>
+       );
+     }
+
+     // Usando o componente:
+     <CartaoUsuario 
+       nome="João Silva" 
+       email="joao@email.com" 
+       foto="/imagens/joao.jpg"
+     />
+
+   Exemplo com props children:
+     function Caixa({ titulo, children }) {
+       return (
+         <div className="caixa">
+           <h3>{titulo}</h3>
+           <div className="conteudo">
+             {children}
+           </div>
+         </div>
+       );
+     }
+
+     // Usando o componente:
+     <Caixa titulo="Aviso Importante">
+       <p>Este é o conteúdo dentro da caixa.</p>
+       <p>Pode ter múltiplos elementos.</p>
+     </Caixa>
+
+8. ESTADO (STATE)
+   Estado é um objeto que armazena dados que podem mudar ao longo do tempo. Quando o estado muda, o componente é re-renderizado automaticamente.
+
+   Usando o hook useState:
+   - useState retorna um array com dois elementos: o valor atual e uma função para atualizá-lo.
+   - Sintaxe: const [valor, setValor] = useState(valorInicial);
+
+   Exemplo de contador:
+     import React, { useState } from 'react';
+
+     function Contador() {
+       const [contagem, setContagem] = useState(0);
+
+       return (
+         <div>
+           <p>Você clicou {contagem} vezes</p>
+           <button onClick={() => setContagem(contagem + 1)}>
+             Incrementar
+           </button>
+           <button onClick={() => setContagem(contagem - 1)}>
+             Decrementar
+           </button>
+           <button onClick={() => setContagem(0)}>
+             Resetar
+           </button>
+         </div>
+       );
+     }
+
+   Exemplo com input controlado:
+     import React, { useState } from 'react';
+
+     function Formulario() {
+       const [nome, setNome] = useState('');
+       const [email, setEmail] = useState('');
+
+       const handleSubmit = (e) => {
+         e.preventDefault();
+         alert(`Nome: ${nome}, Email: ${email}`);
+       };
+
+       return (
+         <form onSubmit={handleSubmit}>
+           <input
+             type="text"
+             placeholder="Seu nome"
+             value={nome}
+             onChange={(e) => setNome(e.target.value)}
+           />
+           <input
+             type="email"
+             placeholder="Seu email"
+             value={email}
+             onChange={(e) => setEmail(e.target.value)}
+           />
+           <button type="submit">Enviar</button>
+         </form>
+       );
+     }
+
+   Exemplo com estado de objeto:
+     import React, { useState } from 'react';
+
+     function PerfilUsuario() {
+       const [usuario, setUsuario] = useState({
+         nome: '',
+         idade: 0,
+         cidade: ''
+       });
+
+       const atualizarCampo = (campo, valor) => {
+         setUsuario({
+           ...usuario,        // mantém os outros campos
+           [campo]: valor     // atualiza apenas o campo específico
+         });
+       };
+
+       return (
+         <div>
+           <input
+             placeholder="Nome"
+             onChange={(e) => atualizarCampo('nome', e.target.value)}
+           />
+           <input
+             type="number"
+             placeholder="Idade"
+             onChange={(e) => atualizarCampo('idade', e.target.value)}
+           />
+           <input
+             placeholder="Cidade"
+             onChange={(e) => atualizarCampo('cidade', e.target.value)}
+           />
+           <p>Olá, {usuario.nome} de {usuario.cidade}!</p>
+         </div>
+       );
+     }
+
+9. HOOKS
+   Hooks são funções especiais que permitem usar recursos do React em componentes funcionais. Os mais comuns são useState e useEffect.
+
+   useState (já visto acima):
+   - Gerencia estado local do componente.
+
+   useEffect - Efeitos colaterais:
+   - Usado para executar código após a renderização.
+   - Útil para buscar dados, manipular DOM, timers, etc.
+
+   Exemplo de useEffect básico:
+     import React, { useState, useEffect } from 'react';
+
+     function Relogio() {
+       const [hora, setHora] = useState(new Date());
+
+       useEffect(() => {
+         // Este código roda após cada renderização
+         const intervalo = setInterval(() => {
+           setHora(new Date());
+         }, 1000);
+
+         // Função de limpeza (cleanup) - roda quando o componente é desmontado
+         return () => clearInterval(intervalo);
+       }, []); // Array vazio = executa apenas uma vez na montagem
+
+       return (
+         <div>
+           <h2>Hora atual: {hora.toLocaleTimeString()}</h2>
+         </div>
+       );
+     }
+
+   Exemplo de useEffect para buscar dados:
+     import React, { useState, useEffect } from 'react';
+
+     function ListaUsuarios() {
+       const [usuarios, setUsuarios] = useState([]);
+       const [carregando, setCarregando] = useState(true);
+
+       useEffect(() => {
+         fetch('https://jsonplaceholder.typicode.com/users')
+           .then(resposta => resposta.json())
+           .then(dados => {
+             setUsuarios(dados);
+             setCarregando(false);
+           });
+       }, []); // Executa apenas uma vez ao montar
+
+       if (carregando) {
+         return <p>Carregando...</p>;
+       }
+
+       return (
+         <ul>
+           {usuarios.map(usuario => (
+             <li key={usuario.id}>{usuario.name}</li>
+           ))}
+         </ul>
+       );
+     }
+
+   useEffect com dependências:
+     import React, { useState, useEffect } from 'react';
+
+     function BuscaProduto({ produtoId }) {
+       const [produto, setProduto] = useState(null);
+
+       useEffect(() => {
+         // Executa sempre que produtoId mudar
+         fetch(`https://api.exemplo.com/produtos/${produtoId}`)
+           .then(resposta => resposta.json())
+           .then(dados => setProduto(dados));
+       }, [produtoId]); // Dependência: re-executa quando produtoId mudar
+
+       return (
+         <div>
+           {produto ? (
+             <h2>{produto.nome} - R$ {produto.preco}</h2>
+           ) : (
+             <p>Carregando produto...</p>
+           )}
+         </div>
+       );
+     }
+
+   Outros hooks úteis:
+   - useContext: Compartilhar dados entre componentes sem passar props.
+   - useRef: Referência a elementos DOM ou valores persistentes.
+   - useMemo: Memorizar valores calculados para otimização.
+   - useCallback: Memorizar funções para otimização.
+
+10. PRÓXIMOS PASSOS
+    - Explore a documentação oficial do React em reactjs.org.
+    - Pratique criando mais componentes e adicionando interatividade.
+    - Aprenda sobre React Router para navegação entre páginas.
+    - Estude gerenciamento de estado global com Context API ou Redux.
+    - Explore frameworks como Next.js para aplicações mais avançadas.
+
+Este é apenas o início. Continue aprendendo e construindo projetos para se familiarizar com o React.
